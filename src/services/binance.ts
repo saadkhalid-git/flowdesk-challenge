@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
 import { OrderBook } from '../types/orderBook';
+import logger from '../../utils/logger';
 
 const BINANCE_WS_URL = 'wss://stream.binance.com:9443/ws/btcusdt@depth5@100ms';
 
@@ -22,7 +23,8 @@ export const fetchBinanceOrderBook = (): Promise<OrderBook> => {
         } else {
           throw new Error('Unexpected data structure');
         }
-      } catch (error) {
+      } catch (error: any) {
+        logger.error(`Error computing global price index: ${error.message}`);
         reject(error);
       }
     });

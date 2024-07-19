@@ -2,6 +2,7 @@ import { fetchBinanceOrderBook } from './binance';
 import { fetchKrakenOrderBook } from './kraken';
 import { fetchHuobiOrderBook } from './huobi';
 import { OrderBook } from '../types/orderBook';
+import logger from '../../utils/logger';
 
 const calculateMidPrice = (orderBook: OrderBook): number => {
   const bestAsk = orderBook.asks[0][0];
@@ -27,8 +28,8 @@ export const getGlobalPriceIndex = async (): Promise<number> => {
         const globalPriceIndex = (binanceMidPrice + krakenMidPrice + huobiMidPrice) / 3;
     
         return globalPriceIndex;
-      } catch (error) {
-        console.error('Error fetching order books or calculating mid prices', error);
+      } catch (error: any) {
+        logger.error(`Error computing global price index: ${error.message}`);
         throw new Error('Failed to get global price index');
       }
 };
